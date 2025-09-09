@@ -2,6 +2,15 @@ $(document).ready(function() {
     const articleList = $('#article-list');
     const articleContent = $('#article-content');
 
+    // Mengatur Marked.js untuk menggunakan Highlight.js
+    marked.setOptions({
+        highlight: function(code, lang) {
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, { language }).value;
+        },
+        langPrefix: 'language-'
+    });
+
     articleContent.hide();
 
     $('.article-link').on('click', function(e) {
@@ -12,7 +21,7 @@ $(document).ready(function() {
 
     function loadArticle(filename) {
         $.ajax({
-            url: `./articles/${filename}`,
+            url: `articles/${filename}`,
             dataType: 'text',
             success: function(markdown) {
                 const htmlContent = marked.parse(markdown);
@@ -29,7 +38,6 @@ $(document).ready(function() {
         });
     }
 
-    // Tangani tombol kembali
     $(document).on('click', '#back-button', function() {
         articleContent.hide();
         articleList.show();
